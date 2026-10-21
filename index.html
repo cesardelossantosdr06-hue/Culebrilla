@@ -477,7 +477,7 @@ input[type=range]{width:100%;height:28px;accent-color:var(--pink)}
     <button class="candy pink wide" data-go="achievs" id="btnAch"></button>
     <button class="candy dark round" id="btnFull" aria-label="fullscreen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5v2H6v3zm11-5h5v5h-2V6h-3zM4 15h2v3h3v2H4zm14 3v-3h2v5h-5v-2z"/></svg></button>
   </div>
-  <div class="foot"><span id="langName"></span> · v1.0.3</div>
+  <div class="foot"><span id="langName"></span> · v1.0.4</div>
 </div></section>
 
 <section id="sLevels" class="screen illus" hidden><div class="wrap">
@@ -680,7 +680,9 @@ const QUAL = {
 };
 const CAMVIS = {near:520, mid:680, far:860};
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const Q = () => QUAL[S.quality] || QUAL.med;
+let LITE = false; // set for this session only when the phone struggles; never saved
+const QUAL_LITE = Object.fromEntries(Object.entries(QUAL).map(([k, q]) => [k, {...q, parts:Math.min(q.parts, 6), glow:false, amb:Math.min(q.amb, 20)}]));
+const Q = () => (LITE ? QUAL_LITE : QUAL)[S.quality] || QUAL.med;
 
 /* ================= Assets (Higgsfield art) ================= */
 const IMG = {};
@@ -1719,19 +1721,21 @@ function tutArrow(c, tm){
 
 /* ================= Automatic performance guard ================= */
 const WEAK = (navigator.deviceMemory && navigator.deviceMemory <= 3) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
-const perf = {acc:0, n:0, slowT:0, fastT:0, scale: WEAK ? .85 : 1};
+const perf = {acc:0, n:0, slowT:0, fastT:0, scale:1};
 /* keep it smooth: first lower the internal resolution a little (barely visible), then trim effects; raise it back when there is headroom */
 function perfTick(rawDt){
   if (!G.world || G.state !== 'play') return;
   perf.acc += rawDt; perf.n++;
   if (perf.acc < 1) return;
   const fps = perf.n/perf.acc; perf.acc = 0; perf.n = 0;
-  if (fps < 45 && Clip.on && !Clip.pend) { Clip.slowN = (Clip.slowN||0) + 1; if (Clip.slowN >= 2) { Clip.stop(true); Clip.suspended = true; } }
-  else if (fps >= 52) Clip.slowN = 0;
-  if (fps < 50) { perf.slowT++; perf.fastT = 0; } else if (fps > 57) { perf.fastT++; perf.slowT = 0; } else { perf.slowT = 0; perf.fastT = 0; }
-  if (perf.slowT >= 2 && perf.scale > .6) { perf.scale = Math.max(.6, perf.scale - .15); perf.slowT = 0; layout(); }
-  else if (perf.slowT >= 4 && S.quality !== 'low') { S.quality = S.quality === 'ultra' ? 'med' : 'low'; perf.scale = 1; persist(); layout(); perf.slowT = 0; toast(t('quality'), t(S.quality)); }
-  if (perf.fastT >= 6 && perf.scale < 1) { perf.scale = Math.min(1, perf.scale + .1); perf.fastT = 0; layout(); }
+  const want = Math.min(Q().fps || 60, 60);
+  if (fps < want*.75 && Clip.on && !Clip.pend) { Clip.slowN = (Clip.slowN||0) + 1; if (Clip.slowN >= 2) { Clip.stop(true); Clip.suspended = true; } }
+  else if (fps >= want*.88) Clip.slowN = 0;
+  if (fps < want*.7) { perf.slowT++; perf.fastT = 0; } else if (fps > want*.9) { perf.fastT++; perf.slowT = 0; } else { perf.slowT = 0; perf.fastT = 0; }
+  // step 1: lighter effects; step 2: slightly lower resolution (never below 80%). Only for this session, never saved.
+  if (perf.slowT >= 3 && !LITE) { LITE = true; perf.slowT = 0; }
+  else if (perf.slowT >= 3 && perf.scale > .8) { perf.scale = Math.max(.8, perf.scale - .1); perf.slowT = 0; layout(); }
+  if (perf.fastT >= 5) { perf.fastT = 0; if (perf.scale < 1) { perf.scale = Math.min(1, perf.scale + .1); layout(); } else if (LITE) LITE = false; }
 }
 
 
@@ -2878,7 +2882,7 @@ function buildSettings(){
   seg($('#segLang'), Object.keys(LANG_NAMES).map(v=>({v,label:LANG_NAMES[v]})), S.lang, v=>{ S.lang = v; applyI18n(); });
   seg($('#segCtrl'), ['swipe','dpad','joystick','keys'].map(v=>({v,label:t(v)})), S.controls, v=>{ S.controls = v; });
   seg($('#segCam'), ['near','mid','far'].map(v=>({v,label:t(v)})), S.camera, v=>{ S.camera = v; });
-  seg($('#segQ'), ['low','med','ultra'].map(v=>({v,label:t(v)})), S.quality, v=>{ S.quality = v; layout(); });
+  seg($('#segQ'), ['low','med','ultra'].map(v=>({v,label:t(v)})), S.quality, v=>{ S.quality = v; S.qPicked = true; LITE = false; perf.scale = 1; layout(); });
   seg($('#segClip'), [{v:true,label:t('on')},{v:false,label:t('off')}], S.clips !== false, v=>{ S.clips = v; if (!v) Clip.stop(true); });
   seg($('#segHap'), [{v:true,label:t('on')},{v:false,label:t('off')}], S.haptics, v=>{ S.haptics = v; if (v) buzz(20); });
   $('#rMusic').value = S.music; $('#rSfx').value = S.sfx;
@@ -3173,11 +3177,12 @@ let last = performance.now();
 function frame(ts){
   requestAnimationFrame(frame);
   const cap = Q().fps;
-  if (cap && ts - last < 1000/cap - 1.5) return;
+  if (cap && ts - last < 1000/cap*.6) return;
   const rawDt = (ts - last)/1000; let dt = Math.min(.05, rawDt); last = ts; perfTick(rawDt);
   if (G.slowmo > 0) { G.slowmo -= dt; dt *= .3; }
   if (G.world) { update(dt); render(); if (Clip.on || Clip.pend) Clip.draw(ts); }
 }
+if (S.quality === 'low' && !S.qPicked) { S.quality = 'med'; persist(); } // older versions lowered it automatically
 if (!touch) $('#bnR').dataset.i18n = 'readyM';
 if (NATIVE) {
   try { NATIVE.StatusBar && NATIVE.StatusBar.hide().catch(() => {}); } catch(e) {}
