@@ -1094,7 +1094,8 @@ function buildGL2D(canvas, gl){
     const b = api.globalCompositeOperation === 'lighter' ? 1 : 0;
     if (b !== batchBlend) { flush(); batchBlend = b; if (b) gl.blendFunc(gl.ONE, gl.ONE); else gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); }
   }
-  const alphaNow = () => { const a = api.globalAlpha; return a >= 1 ? 1 : a > 0 ? a : 0; };
+  let GA = 1; // like the canvas: NaN/infinite alpha is ignored, the rest is kept within 0..1
+  const alphaNow = () => GA;
   const gray = a => { const v = (a*255 + .5) | 0; return ((v << 24) | (v << 16) | (v << 8) | v) >>> 0; };
 
   /* ---------- colours ---------- */
@@ -1434,7 +1435,8 @@ function buildGL2D(canvas, gl){
   /* ---------- the canvas-like object the game draws with ---------- */
   const api = {
     isGL:true, canvas, info, stats,
-    globalAlpha:1, globalCompositeOperation:'source-over', fillStyle:'#000000', strokeStyle:'#000000', lineWidth:1, lineCap:'butt', lineJoin:'miter', miterLimit:10,
+    get globalAlpha(){ return GA; }, set globalAlpha(v){ v = +v; if (v === v && v !== Infinity && v !== -Infinity) GA = v >= 1 ? 1 : v > 0 ? v : 0; },
+    globalCompositeOperation:'source-over', fillStyle:'#000000', strokeStyle:'#000000', lineWidth:1, lineCap:'butt', lineJoin:'miter', miterLimit:10,
     font:'10px sans-serif', textAlign:'start', textBaseline:'alphabetic', lineDashOffset:0, imageSmoothingEnabled:true, imageSmoothingQuality:'low', _dash:[],
     beginFrame(){
       if (lost) return; frameId++;
@@ -1544,7 +1546,7 @@ function buildGL2D(canvas, gl){
       setBlend(); invert();
       let hw = (this.lineWidth > 0 ? this.lineWidth : 1)*scaleOf()/2, aMul = 1;
       if (hw < .5) { aMul = hw*2; hw = .5; }
-      const ga0 = this.globalAlpha; if (aMul < 1) this.globalAlpha = ga0*aMul;
+      const ga0 = GA; if (aMul < 1) GA = ga0*aMul;
       const dash = this._dash && this._dash.length ? this._dash.map(v => v*scaleOf()) : null, doff = (this.lineDashOffset || 0)*scaleOf();
       for (const s of subs) {
         let p = cleanPts(s.p); const n = p.length >> 1;
@@ -1554,7 +1556,7 @@ function buildGL2D(canvas, gl){
         const parts = dash ? dashify(p, closed, dash, doff) : [{p, closed}];
         for (const d of parts) strokePoly(d.p, d.closed, hw, this.lineCap, this.lineJoin);
       }
-      this.globalAlpha = ga0;
+      GA = ga0;
     },
     fillText(t, x, y){ if (lost) return; t = String(t); if (!t) return; const e = textSprite(t, false); this.drawImage(e.k, x - e.ax, y - e.ay, e.w, e.h); },
     strokeText(t, x, y){ if (lost) return; t = String(t); if (!t) return; const e = textSprite(t, true); this.drawImage(e.k, x - e.ax, y - e.ay, e.w, e.h); },
