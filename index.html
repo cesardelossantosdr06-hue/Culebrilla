@@ -65,6 +65,7 @@ img{max-width:100%;-webkit-user-drag:none}
 #hHearts{height:16px;line-height:16px!important;overflow:visible}
 #hHearts{font-size:15px;line-height:1;color:#ff4d7a;letter-spacing:1px;text-shadow:0 2px 0 #2a0b2e}
 #hHearts:empty{display:none}
+#perfMon{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 2px);z-index:30;padding:2px 8px;border-radius:8px;background:rgba(0,0,0,.72);color:#9dff9d;font:700 10px/1.3 monospace;pointer-events:none;white-space:nowrap}
 #clipChip{position:fixed;right:calc(var(--gr) + 4px);top:calc(env(safe-area-inset-top,0px) + 70px);z-index:6;padding:7px 14px;border-radius:999px;background:linear-gradient(180deg,#ff5ab0,#c41e6a);border:2px solid #fff;color:#fff;font-family:var(--display);font-size:15px;box-shadow:0 4px 0 #2a0b2e,0 8px 24px rgba(255,61,139,.5);pointer-events:none;animation:clipIn 2.4s both}
 @keyframes clipIn{0%{transform:translateX(130%)}12%{transform:translateX(-6%)}18%,85%{transform:none;opacity:1}100%{transform:translateX(20%);opacity:0}}
 #resBody .kb{color:#ff9aae;margin-top:-6px}
@@ -480,7 +481,7 @@ input[type=range]{width:100%;height:28px;accent-color:var(--pink)}
     <button class="candy pink wide" data-go="achievs" id="btnAch"></button>
     <button class="candy dark round" id="btnFull" aria-label="fullscreen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5v2H6v3zm11-5h5v5h-2V6h-3zM4 15h2v3h3v2H4zm14 3v-3h2v5h-5v-2z"/></svg></button>
   </div>
-  <div class="foot"><span id="langName"></span> · v1.0.5</div>
+  <div class="foot"><span id="langName"></span> · v1.0.6</div>
 </div></section>
 
 <section id="sLevels" class="screen illus" hidden><div class="wrap">
@@ -508,6 +509,7 @@ input[type=range]{width:100%;height:28px;accent-color:var(--pink)}
   <div class="group glass"><div class="gl"><span data-i18n="quality"></span></div><div class="seg" id="segQ"></div></div>
   <div class="group glass"><div class="gl"><span data-i18n="haptics"></span></div><div class="seg" id="segHap"></div></div>
   <div class="group glass"><div class="gl"><span data-i18n="clips"></span></div><div class="seg" id="segClip"></div></div>
+  <div class="group glass"><div class="gl"><span data-i18n="perfMon"></span></div><div class="seg" id="segPerf"></div></div>
 </div></section>
 
 <section id="sAchievs" class="screen illus" hidden><div class="wrap">
@@ -605,12 +607,12 @@ const I18N_X = {
 };
 for (const l in I18N_X) Object.assign(I18N[l], I18N_X[l]);
 const I18N_C = {
-  es:{clips:'Clips automáticos',clipSaved:'¡Momento guardado!',clipShare:'Compartir momento',clipWait:'Preparando clip…',clipDone:'Clip guardado',clipTxt:'¡Mira esta jugada en Culebrilla! 🐍',clipEnd:'¡Juega gratis!',clipNo:'No se pudo compartir aquí',clipBomb:'¡BOMBA x{n}!',q_loop1:'Haz 1 encierro',streak1:'Racha: 1 día',firstD:'Come frutas para crecer. ¡Que tu cabeza no choque con otra culebrilla!',boostNeed:'¡Come un poco más para usar el turbo!',tutSafe:'¡Cuidado! Chocar con otra culebrilla te elimina',killedBy:'Te eliminó {n}',tut_moveM:'Mueve el ratón para guiar a tu culebrilla',tut_boostM:'Mantén pulsado el clic (o Espacio) para el turbo',readyM:'Haz clic para empezar',hp_moveM:'Mueve el ratón para guiar a tu culebrilla. Mantén el clic o Espacio para el turbo. También puedes usar las flechas o WASD.',adSkip:'¡Mira el anuncio completo para recibir el premio!',adNo:'El anuncio no está disponible ahora',adDouble:'📺 Duplicar oro (+{n})',adThanks:'¡Oro duplicado! +{n}',adLoading:'Cargando anuncio…'},
-  en:{clips:'Auto clips',clipSaved:'Moment saved!',clipShare:'Share moment',clipWait:'Preparing clip…',clipDone:'Clip saved',clipTxt:'Check out this play in Culebrilla! 🐍',clipEnd:'Play free!',clipNo:'Could not share here',clipBomb:'BOMB x{n}!',q_loop1:'Make 1 lasso',streak1:'Streak: 1 day',firstD:'Eat fruit to grow. Don\'t let your head hit another snake!',boostNeed:'Eat a bit more to use boost!',tutSafe:'Careful! Hitting another snake knocks you out',killedBy:'{n} took you out',tut_moveM:'Move the mouse to steer your snake',tut_boostM:'Hold the mouse button (or Space) to boost',readyM:'Click to start',hp_moveM:'Move the mouse to steer your snake. Hold the mouse button or Space to boost. Arrow keys or WASD work too.',adSkip:'Watch the whole ad to get the reward!',adNo:'No ad available right now',adDouble:'📺 Double gold (+{n})',adThanks:'Gold doubled! +{n}',adLoading:'Loading ad…'},
-  pt:{clips:'Clipes automáticos',clipSaved:'Momento salvo!',clipShare:'Compartilhar momento',clipWait:'Preparando clipe…',clipDone:'Clipe salvo',clipTxt:'Olha essa jogada no Culebrilla! 🐍',clipEnd:'Jogue grátis!',clipNo:'Não deu para compartilhar aqui',clipBomb:'BOMBA x{n}!',q_loop1:'Faça 1 laço',streak1:'Sequência: 1 dia',firstD:'Coma frutas para crescer. Não bata a cabeça em outra cobrinha!',boostNeed:'Coma um pouco mais para usar o turbo!',tutSafe:'Cuidado! Bater em outra cobrinha te elimina',killedBy:'{n} te eliminou',tut_moveM:'Mova o mouse para guiar sua cobrinha',tut_boostM:'Segure o clique (ou Espaço) para o turbo',readyM:'Clique para começar',hp_moveM:'Mova o mouse para guiar sua cobrinha. Segure o clique ou Espaço para o turbo. As setas ou WASD também funcionam.',adSkip:'Assista o anúncio inteiro para ganhar o prêmio!',adNo:'Anúncio indisponível agora',adDouble:'📺 Dobrar ouro (+{n})',adThanks:'Ouro dobrado! +{n}',adLoading:'Carregando anúncio…'},
-  fr:{clips:'Clips automatiques',clipSaved:'Moment enregistré !',clipShare:'Partager le moment',clipWait:'Préparation du clip…',clipDone:'Clip enregistré',clipTxt:'Regarde cette action dans Culebrilla ! 🐍',clipEnd:'Joue gratuitement !',clipNo:'Partage impossible ici',clipBomb:'BOMBE x{n} !',q_loop1:'Fais 1 lasso',streak1:'Série : 1 jour',firstD:'Mange des fruits pour grandir. Ne cogne pas ta tête contre un autre serpent !',boostNeed:'Mange un peu plus pour utiliser le turbo !',tutSafe:'Attention ! Toucher un autre serpent t\'élimine',killedBy:'{n} t\'a éliminé',tut_moveM:'Bouge la souris pour guider ton serpent',tut_boostM:'Maintiens le clic (ou Espace) pour le turbo',readyM:'Clique pour commencer',hp_moveM:'Bouge la souris pour guider ton serpent. Maintiens le clic ou Espace pour le turbo. Les flèches ou ZQSD marchent aussi.',adSkip:'Regarde toute la pub pour recevoir la récompense !',adNo:'Pas de pub disponible pour le moment',adDouble:'📺 Doubler l\'or (+{n})',adThanks:'Or doublé ! +{n}',adLoading:'Chargement de la pub…'},
-  de:{clips:'Auto-Clips',clipSaved:'Moment gespeichert!',clipShare:'Moment teilen',clipWait:'Clip wird erstellt…',clipDone:'Clip gespeichert',clipTxt:'Schau dir diesen Zug in Culebrilla an! 🐍',clipEnd:'Gratis spielen!',clipNo:'Teilen hier nicht möglich',clipBomb:'BOMBE x{n}!',q_loop1:'Mach 1 Lasso',streak1:'Serie: 1 Tag',firstD:'Friss Früchte, um zu wachsen. Stoß nicht mit dem Kopf gegen andere Schlangen!',boostNeed:'Friss etwas mehr, um Turbo zu nutzen!',tutSafe:'Vorsicht! Stößt du gegen eine Schlange, bist du raus',killedBy:'{n} hat dich erwischt',tut_moveM:'Bewege die Maus, um deine Schlange zu lenken',tut_boostM:'Halte die Maustaste (oder Leertaste) für Turbo',readyM:'Klicke zum Starten',hp_moveM:'Bewege die Maus, um deine Schlange zu lenken. Halte die Maustaste oder Leertaste für Turbo. Pfeiltasten oder WASD gehen auch.',adSkip:'Schau die ganze Werbung, um die Belohnung zu bekommen!',adNo:'Gerade keine Werbung verfügbar',adDouble:'📺 Gold verdoppeln (+{n})',adThanks:'Gold verdoppelt! +{n}',adLoading:'Werbung lädt…'},
-  ja:{clips:'自動クリップ',clipSaved:'名場面を保存！',clipShare:'名場面をシェア',clipWait:'クリップ準備中…',clipDone:'クリップを保存しました',clipTxt:'Culebrillaのこのプレイを見て！🐍',clipEnd:'無料で遊ぼう！',clipNo:'ここではシェアできません',clipBomb:'ボム x{n}！',q_loop1:'囲い込みを1回',streak1:'連続1日',firstD:'フルーツを食べて大きくなろう。頭をほかのヘビにぶつけないで！',boostNeed:'もう少し食べるとブーストが使えるよ！',tutSafe:'気をつけて！ほかのヘビにぶつかるとアウト',killedBy:'{n}にやられた',tut_moveM:'マウスを動かしてヘビを操作しよう',tut_boostM:'クリック長押し（またはスペース）でブースト',readyM:'クリックしてスタート',hp_moveM:'マウスでヘビを操作。クリック長押しかスペースでブースト。矢印キーやWASDも使えます。',adSkip:'広告を最後まで見ると報酬がもらえます！',adNo:'今は広告がありません',adDouble:'📺 ゴールド2倍 (+{n})',adThanks:'ゴールド2倍！ +{n}',adLoading:'広告を読み込み中…'}
+  es:{clips:'Clips automáticos',clipSaved:'¡Momento guardado!',clipShare:'Compartir momento',clipWait:'Preparando clip…',clipDone:'Clip guardado',clipTxt:'¡Mira esta jugada en Culebrilla! 🐍',clipEnd:'¡Juega gratis!',clipNo:'No se pudo compartir aquí',clipBomb:'¡BOMBA x{n}!',q_loop1:'Haz 1 encierro',streak1:'Racha: 1 día',firstD:'Come frutas para crecer. ¡Que tu cabeza no choque con otra culebrilla!',boostNeed:'¡Come un poco más para usar el turbo!',tutSafe:'¡Cuidado! Chocar con otra culebrilla te elimina',killedBy:'Te eliminó {n}',tut_moveM:'Mueve el ratón para guiar a tu culebrilla',tut_boostM:'Mantén pulsado el clic (o Espacio) para el turbo',readyM:'Haz clic para empezar',hp_moveM:'Mueve el ratón para guiar a tu culebrilla. Mantén el clic o Espacio para el turbo. También puedes usar las flechas o WASD.',adSkip:'¡Mira el anuncio completo para recibir el premio!',adNo:'El anuncio no está disponible ahora',adDouble:'📺 Duplicar oro (+{n})',adThanks:'¡Oro duplicado! +{n}',adLoading:'Cargando anuncio…',perfMon:'Monitor de rendimiento'},
+  en:{clips:'Auto clips',clipSaved:'Moment saved!',clipShare:'Share moment',clipWait:'Preparing clip…',clipDone:'Clip saved',clipTxt:'Check out this play in Culebrilla! 🐍',clipEnd:'Play free!',clipNo:'Could not share here',clipBomb:'BOMB x{n}!',q_loop1:'Make 1 lasso',streak1:'Streak: 1 day',firstD:'Eat fruit to grow. Don\'t let your head hit another snake!',boostNeed:'Eat a bit more to use boost!',tutSafe:'Careful! Hitting another snake knocks you out',killedBy:'{n} took you out',tut_moveM:'Move the mouse to steer your snake',tut_boostM:'Hold the mouse button (or Space) to boost',readyM:'Click to start',hp_moveM:'Move the mouse to steer your snake. Hold the mouse button or Space to boost. Arrow keys or WASD work too.',adSkip:'Watch the whole ad to get the reward!',adNo:'No ad available right now',adDouble:'📺 Double gold (+{n})',adThanks:'Gold doubled! +{n}',adLoading:'Loading ad…',perfMon:'Performance monitor'},
+  pt:{clips:'Clipes automáticos',clipSaved:'Momento salvo!',clipShare:'Compartilhar momento',clipWait:'Preparando clipe…',clipDone:'Clipe salvo',clipTxt:'Olha essa jogada no Culebrilla! 🐍',clipEnd:'Jogue grátis!',clipNo:'Não deu para compartilhar aqui',clipBomb:'BOMBA x{n}!',q_loop1:'Faça 1 laço',streak1:'Sequência: 1 dia',firstD:'Coma frutas para crescer. Não bata a cabeça em outra cobrinha!',boostNeed:'Coma um pouco mais para usar o turbo!',tutSafe:'Cuidado! Bater em outra cobrinha te elimina',killedBy:'{n} te eliminou',tut_moveM:'Mova o mouse para guiar sua cobrinha',tut_boostM:'Segure o clique (ou Espaço) para o turbo',readyM:'Clique para começar',hp_moveM:'Mova o mouse para guiar sua cobrinha. Segure o clique ou Espaço para o turbo. As setas ou WASD também funcionam.',adSkip:'Assista o anúncio inteiro para ganhar o prêmio!',adNo:'Anúncio indisponível agora',adDouble:'📺 Dobrar ouro (+{n})',adThanks:'Ouro dobrado! +{n}',adLoading:'Carregando anúncio…',perfMon:'Monitor de desempenho'},
+  fr:{clips:'Clips automatiques',clipSaved:'Moment enregistré !',clipShare:'Partager le moment',clipWait:'Préparation du clip…',clipDone:'Clip enregistré',clipTxt:'Regarde cette action dans Culebrilla ! 🐍',clipEnd:'Joue gratuitement !',clipNo:'Partage impossible ici',clipBomb:'BOMBE x{n} !',q_loop1:'Fais 1 lasso',streak1:'Série : 1 jour',firstD:'Mange des fruits pour grandir. Ne cogne pas ta tête contre un autre serpent !',boostNeed:'Mange un peu plus pour utiliser le turbo !',tutSafe:'Attention ! Toucher un autre serpent t\'élimine',killedBy:'{n} t\'a éliminé',tut_moveM:'Bouge la souris pour guider ton serpent',tut_boostM:'Maintiens le clic (ou Espace) pour le turbo',readyM:'Clique pour commencer',hp_moveM:'Bouge la souris pour guider ton serpent. Maintiens le clic ou Espace pour le turbo. Les flèches ou ZQSD marchent aussi.',adSkip:'Regarde toute la pub pour recevoir la récompense !',adNo:'Pas de pub disponible pour le moment',adDouble:'📺 Doubler l\'or (+{n})',adThanks:'Or doublé ! +{n}',adLoading:'Chargement de la pub…',perfMon:'Moniteur de performance'},
+  de:{clips:'Auto-Clips',clipSaved:'Moment gespeichert!',clipShare:'Moment teilen',clipWait:'Clip wird erstellt…',clipDone:'Clip gespeichert',clipTxt:'Schau dir diesen Zug in Culebrilla an! 🐍',clipEnd:'Gratis spielen!',clipNo:'Teilen hier nicht möglich',clipBomb:'BOMBE x{n}!',q_loop1:'Mach 1 Lasso',streak1:'Serie: 1 Tag',firstD:'Friss Früchte, um zu wachsen. Stoß nicht mit dem Kopf gegen andere Schlangen!',boostNeed:'Friss etwas mehr, um Turbo zu nutzen!',tutSafe:'Vorsicht! Stößt du gegen eine Schlange, bist du raus',killedBy:'{n} hat dich erwischt',tut_moveM:'Bewege die Maus, um deine Schlange zu lenken',tut_boostM:'Halte die Maustaste (oder Leertaste) für Turbo',readyM:'Klicke zum Starten',hp_moveM:'Bewege die Maus, um deine Schlange zu lenken. Halte die Maustaste oder Leertaste für Turbo. Pfeiltasten oder WASD gehen auch.',adSkip:'Schau die ganze Werbung, um die Belohnung zu bekommen!',adNo:'Gerade keine Werbung verfügbar',adDouble:'📺 Gold verdoppeln (+{n})',adThanks:'Gold verdoppelt! +{n}',adLoading:'Werbung lädt…',perfMon:'Leistungsanzeige'},
+  ja:{clips:'自動クリップ',clipSaved:'名場面を保存！',clipShare:'名場面をシェア',clipWait:'クリップ準備中…',clipDone:'クリップを保存しました',clipTxt:'Culebrillaのこのプレイを見て！🐍',clipEnd:'無料で遊ぼう！',clipNo:'ここではシェアできません',clipBomb:'ボム x{n}！',q_loop1:'囲い込みを1回',streak1:'連続1日',firstD:'フルーツを食べて大きくなろう。頭をほかのヘビにぶつけないで！',boostNeed:'もう少し食べるとブーストが使えるよ！',tutSafe:'気をつけて！ほかのヘビにぶつかるとアウト',killedBy:'{n}にやられた',tut_moveM:'マウスを動かしてヘビを操作しよう',tut_boostM:'クリック長押し（またはスペース）でブースト',readyM:'クリックしてスタート',hp_moveM:'マウスでヘビを操作。クリック長押しかスペースでブースト。矢印キーやWASDも使えます。',adSkip:'広告を最後まで見ると報酬がもらえます！',adNo:'今は広告がありません',adDouble:'📺 ゴールド2倍 (+{n})',adThanks:'ゴールド2倍！ +{n}',adLoading:'広告を読み込み中…',perfMon:'パフォーマンス表示'}
 };
 for (const l in I18N_C) Object.assign(I18N[l], I18N_C[l]);
 
@@ -752,6 +754,7 @@ const Snd = {
   play(n, p=1){
     if (!this.ctx || S.sfx === 0) return;
     const c = this.ctx, now = c.currentTime, mf = m => 440*Math.pow(2, (m - 69)/12);
+    if (n === 'eat' || n === 'orb') { if (now - (this.lastEat || 0) < .045) return; this.lastEat = now; } // a swarm of orbs = one sound, not fifty
     switch (n) {
       case 'eat': { // each combo step climbs a pentatonic scale: eating becomes a melody
         const m = 72 + PENTA[Math.min(PENTA.length - 1, Math.max(0, Math.round(p) - 1))];
@@ -864,9 +867,17 @@ const Ads = {
     return this.rewarded ? 'reward' : this.failed ? 'error' : 'skip';
   }
 };
+let buzzT = 0;
 function buzz(p){
   if (!S.haptics) return;
-  if (NATIVE && NATIVE.Haptics) { const ms = Array.isArray(p) ? p.filter((_, i) => i % 2 === 0).reduce((a, b) => a + b, 0) : p; try { NATIVE.Haptics.vibrate({duration: Math.max(8, Math.min(160, ms))}).catch(() => {}); } catch(e) {} return; }
+  if (NATIVE && NATIVE.Haptics) {
+    const ms = Array.isArray(p) ? p.filter((_, i) => i % 2 === 0).reduce((a, b) => a + b, 0) : p;
+    const now = performance.now();
+    if (ms < 15 || now - buzzT < 140) return; // no buzz per fruit; at most ~7 per second
+    buzzT = now;
+    try { NATIVE.Haptics.vibrate({duration: Math.min(120, ms)}).catch(() => {}); } catch(e) {}
+    return;
+  }
   if (!navigator.vibrate) return; try { navigator.vibrate(p); } catch(e) {}
 }
 
@@ -1645,15 +1656,20 @@ function drawSnakeExtras(c, s, tm, rad){
   const p = s.pts, n = p.length;
   if (!s.me && s.alive && n > 10 && Q().detail) {
     const from = Math.floor(n*.62);
-    c.fillStyle = 'rgba(255,255,255,.55)';
-    for (let i = from; i < n; i += 3) { const q = p[i], r = rad(i)*.28*(1 + .3*Math.sin(tm*6 + i)); c.beginPath(); c.arc(q.x, q.y, r, 0, TAU); c.fill(); }
+    const ga = c.globalAlpha, gl = dotSprite('#ffffff'); c.globalAlpha = ga*.55;
+    for (let i = from; i < n; i += 3) { const q = p[i], r = rad(i)*.28*(1 + .3*Math.sin(tm*6 + i)); c.drawImage(gl, q.x - r, q.y - r, r*2, r*2); }
+    c.globalAlpha = ga;
   }
   if (!s.me) return;
   const tier = G.tier||0, pw = G.power && G.time < G.power.until ? G.power.k : null;
   if (tier || pw) {
     const col = pw ? FAMCOL[pw] : TIERS[tier-1][1];
     c.save(); c.globalCompositeOperation = 'lighter';
-    for (let i = n - 1; i >= 0; i -= 3) { const q = p[i], r = rad(i)*(pw ? 2 : 1.55); c.fillStyle = pw === 'rainbow' ? `hsla(${(i*14 + tm*300) % 360},100%,62%,.3)` : rgba(col, pw ? .2 + .1*Math.sin(tm*12 + i) : .12); c.beginPath(); c.arc(q.x, q.y, r, 0, TAU); c.fill(); }
+    const ga = c.globalAlpha, aura = pw === 'rainbow' ? null : softSprite(col);
+    for (let i = n - 1; i >= 0; i -= 3) { const q = p[i], r = rad(i)*(pw ? 2 : 1.55);
+      c.globalAlpha = ga*(pw === 'rainbow' ? .5 : pw ? .38 + .18*Math.sin(tm*12 + i) : .24);
+      c.drawImage(aura || softSprite(FRENZY_COLS[((i + (tm*10|0)) % FRENZY_COLS.length)]), q.x - r, q.y - r, r*2, r*2); }
+    c.globalAlpha = ga;
     c.restore();
     if (pw === 'bolt' && R() < .6) { const q = p[(R()*n)|0]; c.strokeStyle = '#fff6a0'; c.lineWidth = 2; c.beginPath(); c.moveTo(q.x, q.y); for (let j = 0; j < 4; j++) c.lineTo(q.x + (R()-.5)*60, q.y + (R()-.5)*60); c.stroke(); }
   }
@@ -1726,6 +1742,7 @@ function tutArrow(c, tm){
 
 /* ================= Automatic performance guard ================= */
 const WEAK = (navigator.deviceMemory && navigator.deviceMemory <= 3) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+const STRONG = !WEAK && (navigator.deviceMemory || 4) >= 6 && (navigator.hardwareConcurrency || 4) >= 8;
 const perf = {acc:0, n:0, slowT:0, fastT:0, scale:1};
 /* keep it smooth: first lower the internal resolution a little (barely visible), then trim effects; raise it back when there is headroom */
 function perfTick(rawDt){
@@ -2228,7 +2245,8 @@ document.querySelectorAll('#pad button').forEach(b => {
 /* ================= Rendering ================= */
 function layout(){
   VW = innerWidth; VH = innerHeight;
-  dpr = Math.max(.75, Math.min(window.devicePixelRatio || 1, touch && S.quality === 'med' ? 1.5 : Q().dpr)*(typeof perf !== 'undefined' ? perf.scale : 1));
+  try { glpx = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--glpx')) || 0; } catch(e) { glpx = 0; }
+  dpr = Math.max(.75, Math.min(window.devicePixelRatio || 1, touch && S.quality === 'med' ? (STRONG ? 2 : 1.5) : Q().dpr)*(typeof perf !== 'undefined' ? perf.scale : 1));
   cv.width = Math.round(VW*dpr); cv.height = Math.round(VH*dpr);
 }
 function buildFloor(){
@@ -2298,13 +2316,11 @@ function drawSnake(c, s, tm){
   c.globalAlpha = alpha;
   const rad = i => { const t01 = i/(n-1); return r0*(t01 < .7 ? 1 : 1 - (t01 - .7)/.3*.55); };
   // shadow + boost aura
-  c.fillStyle = 'rgba(0,0,0,.22)'; c.beginPath();
-  for (let i = n-1; i >= 0; i -= 2) { const q = p[i], r = rad(i); c.moveTo(q.x + 4 + r, q.y + 8); c.arc(q.x + 4, q.y + 8, r, 0, TAU); } c.fill();
-  if (s.me && G.time < (G.frenzyUntil||0)) { for (let i = n-1; i >= 0; i -= 3) { const q = p[i], r = rad(i)*1.9; c.fillStyle = `hsla(${(i*12 + tm*360) % 360},100%,60%,.22)`; c.beginPath(); c.arc(q.x, q.y, r, 0, TAU); c.fill(); } }
-  if (s.boost && s.mass > 3.2) { c.fillStyle = rgba(sk.a, .22); c.beginPath(); for (let i = n-1; i >= 0; i -= 3) { const q = p[i], r = rad(i)*1.7; c.moveTo(q.x + r, q.y); c.arc(q.x, q.y, r, 0, TAU); } c.fill(); }
+  { const sh = snakeShadowSprite(); for (let i = n-1; i >= 0; i -= 2) { const q = p[i], r = rad(i); c.drawImage(sh, q.x + 4 - r, q.y + 8 - r, r*2, r*2); } }
+  if (s.me && G.time < (G.frenzyUntil||0)) { c.globalAlpha = alpha*.5; for (let i = n-1; i >= 0; i -= 3) { const q = p[i], r = rad(i)*1.9; c.drawImage(softSprite(FRENZY_COLS[((i + (tm*8|0)) % FRENZY_COLS.length)]), q.x - r, q.y - r, r*2, r*2); } c.globalAlpha = alpha; }
+  if (s.boost && s.mass > 3.2) { c.globalAlpha = alpha*.45; const au = softSprite(css(sk.a)); for (let i = n-1; i >= 0; i -= 3) { const q = p[i], r = rad(i)*1.7; c.drawImage(au, q.x - r, q.y - r, r*2, r*2); } c.globalAlpha = alpha; }
   // outline
-  c.fillStyle = css(sk.o); c.beginPath();
-  for (let i = n-1; i >= 0; i--) { const q = p[i], r = rad(i) + 2.6; c.moveTo(q.x + r, q.y); c.arc(q.x, q.y, r, 0, TAU); } c.fill();
+  { const ol = dotSprite(css(sk.o)); for (let i = n-1; i >= 0; i--) { const q = p[i], r = rad(i) + 2.6; c.drawImage(ol, q.x - r, q.y - r, r*2, r*2); } }
   // beads: base, inner light, gloss dot — tail to head
   for (let i = n-1; i >= 1; i--) {
     const q = p[i], r = rad(i), hb = r*1.0667;
@@ -2327,9 +2343,8 @@ function drawSnake(c, s, tm){
   c.restore();
   c.globalAlpha = 1;
   if (s.ai && s.alive && Q().detail) {
-    const fs = Math.max(13, 15/cam.z*.8);
-    c.font = `400 ${fs}px 'Lilita One', sans-serif`; c.textAlign = 'center'; c.lineJoin = 'round';
-    c.lineWidth = fs*.28; c.strokeStyle = '#2a0b2e'; c.strokeText(s.name, h.x, h.y - r0*2.1); c.fillStyle = sk.A; c.fillText(s.name, h.x, h.y - r0*2.1);
+    const fs = Math.round(Math.max(13, 15/cam.z*.8)), lb = labelSprite(s.name, sk.A, fs);
+    c.drawImage(lb, h.x - lb.width/2, h.y - r0*2.1 - lb.height*.62);
   }
   if (s.boss) { c.fillStyle = '#ffd23a'; c.strokeStyle = '#2a0b2e'; c.lineWidth = 4; c.font = `400 ${r0*2.2}px 'Lilita One',sans-serif`; c.textAlign = 'center'; c.strokeText('♛', h.x, h.y - r0*2.6); c.fillText('♛', h.x, h.y - r0*2.6); }
   if (s.me && G.leader === s) { c.fillStyle = '#ffd23a'; c.font = `400 ${r0*1.6}px 'Lilita One',sans-serif`; c.textAlign = 'center'; c.fillText('♛', h.x, h.y - r0*2); }
@@ -2346,6 +2361,7 @@ function drawProp(c, p, tm, deco){
 
 /* ================= Rendering cache: pre-rendered sprites so each frame is mostly cheap image copies ================= */
 const SPR = new Map();
+const FRENZY_COLS = ['#ff4d6d','#ffb03a','#ffe94a','#5aff8a','#3ee6ff','#7a7aff','#ff5ad0'];
 function spr(key, w, h, draw){
   let s = SPR.get(key);
   if (!s) { s = document.createElement('canvas'); s.width = w; s.height = h; draw(s.getContext('2d'), w, h); SPR.set(key, s); if (SPR.size > 1400) SPR.delete(SPR.keys().next().value); }
@@ -2371,6 +2387,18 @@ function orbSprite(hex){
 }
 /* fruit + its ground shadow baked into one small sprite: one draw call per fruit */
 function fruitSprite(im, key){ return spr('FS' + key, 96, 100, c => { c.drawImage(shadowSprite(), 16, 74, 64, 23); c.imageSmoothingQuality = 'high'; c.drawImage(im, 0, 0, 96, 96); }); }
+/* small round sprites so particles, outlines and glows are cheap image copies instead of path drawing */
+function dotSprite(col){ return spr('DOT' + col, 32, 32, c => { c.fillStyle = col; c.beginPath(); c.arc(16, 16, 15.2, 0, TAU); c.fill(); }); }
+function softSprite(col){ return spr('SOFT' + col, 32, 32, c => { const g = c.createRadialGradient(16, 16, 0, 16, 16, 16); g.addColorStop(0, col); g.addColorStop(.35, col); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(0, 0, 32, 32); }); }
+function starSprite(col){ return spr('STAR' + col, 32, 32, c => { c.fillStyle = col; c.beginPath(); for (let i = 0; i < 8; i++) { const r = i%2 ? 15*.28 : 15; c.lineTo(16 + Math.cos(i*Math.PI/4)*r, 16 + Math.sin(i*Math.PI/4)*r); } c.closePath(); c.fill(); }); }
+const snakeShadowSprite = () => spr('SSH', 32, 32, c => { c.fillStyle = 'rgba(0,0,0,.22)'; c.beginPath(); c.arc(16, 16, 15.2, 0, TAU); c.fill(); });
+/* rival names: text drawn once into a sprite (setting a canvas font every frame is slow) */
+function labelSprite(txt, col, fs){
+  return spr('LBL' + txt + col + fs, Math.ceil(txt.length*fs*.62 + fs*.8), Math.ceil(fs*1.5), (c, w, h) => {
+    c.font = `400 ${fs}px 'Lilita One', sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
+    c.lineWidth = fs*.28; c.strokeStyle = '#2a0b2e'; c.strokeText(txt, w/2, h/2); c.fillStyle = col; c.fillText(txt, w/2, h/2);
+  });
+}
 const shadowSprite = () => spr('SH', 64, 24, c => { const g = c.createRadialGradient(32, 12, 0, 32, 12, 32); g.addColorStop(0, 'rgba(0,0,0,.42)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.save(); c.scale(1, 12/32); c.fillStyle = g; c.beginPath(); c.arc(32, 32, 32, 0, TAU); c.fill(); c.restore(); });
 const fireSprite = () => spr('FIRE', 64, 64, c => { const g = c.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(255,245,170,.95)'); g.addColorStop(.35, 'rgba(255,150,40,.75)'); g.addColorStop(.7, 'rgba(255,60,0,.25)'); g.addColorStop(1, 'rgba(255,40,0,0)'); c.fillStyle = g; c.fillRect(0, 0, 64, 64); });
 function propSprite(k){
@@ -2466,17 +2494,20 @@ function render(){
   for (const s of w.snakes) if (s.alive && !s.me && s.pts.some((q,i) => i % 6 === 0 && q.x > vx0 - 60 && q.x < vx1 + 60 && q.y > vy0 - 60 && q.y < vy1 + 60)) drawSnake(c, s, tm);
   if (G.player && (G.player.alive || G.state === 'over')) drawSnake(c, G.player, tm);
   for (const p of parts) {
-    c.globalAlpha = Math.max(0, Math.min(1, p.life)); c.fillStyle = p.col;
-    if (p.kind === 'ring') { c.strokeStyle = p.col; c.lineWidth = 3; c.beginPath(); c.arc(p.x, p.y, 40*(1.2 - p.life*2), 0, TAU); c.stroke(); }
-    else if (p.kind === 'star') { c.save(); c.translate(p.x, p.y); c.rotate(p.rot); c.beginPath(); for (let i = 0; i < 8; i++) { const r = i%2 ? p.r*.45 : p.r*1.6; c.lineTo(Math.cos(i*Math.PI/4)*r, Math.sin(i*Math.PI/4)*r); } c.fill(); c.restore(); }
-    else if (p.kind === 'conf') { c.save(); c.translate(p.x, p.y); c.rotate(p.rot); c.fillRect(-p.r, -p.r*.5, p.r*2, p.r); c.restore(); }
-    else { c.beginPath(); c.arc(p.x, p.y, p.r, 0, TAU); c.fill(); }
+    const a = Math.min(1, p.life); if (a <= 0) continue;
+    if (p.x < vx0 - 60 || p.x > vx1 + 60 || p.y < vy0 - 60 || p.y > vy1 + 60) continue;
+    c.globalAlpha = a;
+    if (p.kind === 'ring') { const rr = 40*(1.2 - p.life*2); if (rr > 0) { c.strokeStyle = p.col; c.lineWidth = 3; c.beginPath(); c.arc(p.x, p.y, rr, 0, TAU); c.stroke(); } }
+    else if (p.kind === 'star') { const r = p.r*1.6; c.drawImage(starSprite(p.col), p.x - r, p.y - r, r*2, r*2); }
+    else if (p.kind === 'conf') { const wd = p.r*2*Math.abs(Math.cos(p.rot)) + 1; c.fillStyle = p.col; c.fillRect(p.x - wd/2, p.y - p.r*.5, wd, p.r); }
+    else c.drawImage(dotSprite(p.col), p.x - p.r, p.y - p.r, p.r*2, p.r*2);
   }
   c.globalAlpha = 1;
   critDraw(c, tm, 'air', vx0, vy0, vx1, vy1);
   c.textAlign = 'center'; c.lineJoin = 'round';
+  let lastFont = '';
   for (const f of floats) {
-    const sz = (f.big ? 30 : 22)/Math.max(.6, z)*.7; c.font = `400 ${sz}px 'Lilita One', sans-serif`;
+    const sz = Math.round((f.big ? 30 : 22)/Math.max(.6, z)*.7), fnt = `400 ${sz}px 'Lilita One', sans-serif`; if (fnt !== lastFont) { c.font = fnt; lastFont = fnt; }
     c.globalAlpha = Math.max(0, Math.min(1, f.life*1.5)); c.strokeStyle = '#2a0b2e'; c.lineWidth = sz*.22; c.strokeText(f.txt, f.x, f.y); c.fillStyle = f.col; c.fillText(f.txt, f.x, f.y);
   }
   c.globalAlpha = 1;
@@ -2506,8 +2537,20 @@ function render(){
   drawMinimap(c);
 }
 function bigText(s, y, col){ const sz = Math.min(32, VW/12); ctx.font = `400 ${sz}px 'Lilita One', sans-serif`; ctx.textAlign = 'center'; ctx.lineWidth = 7; ctx.strokeStyle = '#2a0b2e'; ctx.strokeText(s, VW/2, y); ctx.fillStyle = col; ctx.fillText(s, VW/2, y); }
+let glpx = 0;
+const mini = {cv:document.createElement('canvas'), t:0};
 function drawMinimap(c){
-  const w = G.world, sz = Math.min(110, VW*.26), m = 12, x0 = m + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--glpx'))||0), y0 = VH - sz - m - (S.controls === 'dpad' ? 160 : 0) - safeB;
+  const now = performance.now(), sz = Math.min(110, VW*.26), m = 12, y0 = VH - sz - m - (S.controls === 'dpad' ? 160 : 0) - safeB, x0 = m + glpx, pad = 6;
+  if (now - mini.t > 120 || mini.sz !== sz) {
+    mini.t = now; mini.sz = sz; const k2 = Math.min(2, dpr), W = Math.ceil((sz + pad*2)*k2);
+    if (mini.cv.width !== W) { mini.cv.width = W; mini.cv.height = W; }
+    const mc = mini.cv.getContext('2d'); mc.setTransform(1,0,0,1,0,0); mc.clearRect(0, 0, W, W); mc.setTransform(k2, 0, 0, k2, pad*k2 - 0*k2, pad*k2);
+    drawMinimapInto(mc, 0, 0, sz);
+  }
+  c.drawImage(mini.cv, x0 - pad, y0 - pad, sz + pad*2, sz + pad*2);
+}
+function drawMinimapInto(c, x0, y0, sz){
+  const w = G.world;
   const k = sz / Math.max(w.w, w.h);
   c.save(); c.globalAlpha = .9;
   c.fillStyle = 'rgba(13,8,34,.55)'; c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 2;
@@ -2564,14 +2607,14 @@ function drawAmb(c){
     if (type === 'firefly' || type === 'sparkle' || type === 'star') {
       const a = .35 + .65*Math.abs(Math.sin(p.ph*(type==='star'?1.5:3)));
       c.globalAlpha = a*(type==='star'?.8:.9);
-      if (type === 'sparkle') { c.save(); c.translate(p.x,p.y); c.rotate(p.rot*.3); c.fillRect(-p.r*.15,-p.r,p.r*.3,p.r*2); c.fillRect(-p.r,-p.r*.15,p.r*2,p.r*.3); c.restore(); }
-      else { c.beginPath(); c.arc(p.x,p.y,p.r,0,7); c.fill(); if (type==='firefly') { c.globalAlpha = a*.25; c.beginPath(); c.arc(p.x,p.y,p.r*3,0,7); c.fill(); } }
+      if (type === 'sparkle') { c.fillRect(p.x-p.r*.15, p.y-p.r, p.r*.3, p.r*2); c.fillRect(p.x-p.r, p.y-p.r*.15, p.r*2, p.r*.3); }
+      else { c.drawImage(dotSprite(p.col), p.x-p.r, p.y-p.r, p.r*2, p.r*2); if (type==='firefly') { c.globalAlpha = a*.5; c.drawImage(softSprite(p.col), p.x-p.r*3, p.y-p.r*3, p.r*6, p.r*6); } }
     } else if (type === 'rain') { c.globalAlpha = .35; c.lineWidth = 1.5; c.beginPath(); c.moveTo(p.x,p.y); c.lineTo(p.x+6,p.y-16); c.stroke(); }
-    else if (type === 'petal') { c.globalAlpha = .85; c.save(); c.translate(p.x,p.y); c.rotate(p.rot); c.beginPath(); c.ellipse(0,0,p.r,p.r*.55,0,0,7); c.fill(); c.restore(); }
+    else if (type === 'petal') { c.globalAlpha = .85; const ws = p.r*(1.2 + .8*Math.abs(Math.cos(p.rot))); c.drawImage(dotSprite(p.col), p.x-ws/2, p.y-p.r*.55, ws, p.r*1.1); }
     else if (type === 'bubble') { c.globalAlpha = .5; c.lineWidth = 1.5; c.beginPath(); c.arc(p.x,p.y,p.r,0,7); c.stroke(); c.globalAlpha = .6; c.beginPath(); c.arc(p.x-p.r*.35,p.y-p.r*.35,p.r*.25,0,7); c.fill(); }
-    else if (type === 'sprinkle') { c.globalAlpha = .9; c.save(); c.translate(p.x,p.y); c.rotate(p.rot); c.fillRect(-p.r*1.4,-p.r*.45,p.r*2.8,p.r*.9); c.restore(); }
-    else if (type === 'wisp') { c.globalAlpha = .12 + .08*Math.sin(p.ph*2); c.beginPath(); c.arc(p.x,p.y,p.r,0,7); c.fill(); }
-    else { c.globalAlpha = type==='ember' ? .9 : .7; c.beginPath(); c.arc(p.x,p.y,p.r,0,7); c.fill(); }
+    else if (type === 'sprinkle') { c.globalAlpha = .9; const wd = p.r*(1 + 1.8*Math.abs(Math.cos(p.rot))); c.fillRect(p.x-wd/2, p.y-p.r*.45, wd, p.r*.9); }
+    else if (type === 'wisp') { c.globalAlpha = .12 + .08*Math.sin(p.ph*2); c.drawImage(softSprite(p.col), p.x-p.r, p.y-p.r, p.r*2, p.r*2); }
+    else { c.globalAlpha = type==='ember' ? .9 : .7; c.drawImage(dotSprite(p.col), p.x-p.r, p.y-p.r, p.r*2, p.r*2); }
   }
   c.globalAlpha = 1;
 }
@@ -2888,6 +2931,7 @@ function buildSettings(){
   seg($('#segCtrl'), ['swipe','dpad','joystick','keys'].map(v=>({v,label:t(v)})), S.controls, v=>{ S.controls = v; });
   seg($('#segCam'), ['near','mid','far'].map(v=>({v,label:t(v)})), S.camera, v=>{ S.camera = v; });
   seg($('#segQ'), ['low','med','ultra'].map(v=>({v,label:t(v)})), S.quality, v=>{ S.quality = v; S.qPicked = true; LITE = false; perf.scale = 1; layout(); });
+  seg($('#segPerf'), [{v:true,label:t('on')},{v:false,label:t('off')}], !!S.perfMon, v=>{ S.perfMon = v; if (!v && pm.el) pm.el.hidden = true; });
   seg($('#segClip'), [{v:true,label:t('on')},{v:false,label:t('off')}], clipsOn(), v=>{ S.clips = v; if (!v) Clip.stop(true); else Clip.suspended = false; });
   seg($('#segHap'), [{v:true,label:t('on')},{v:false,label:t('off')}], S.haptics, v=>{ S.haptics = v; if (v) buzz(20); });
   $('#rMusic').value = S.music; $('#rSfx').value = S.sfx;
@@ -3185,7 +3229,19 @@ function frame(ts){
   if (cap) { const step = 1000/cap; frameAcc += ts - lastTick; lastTick = ts; if (frameAcc < step*.8) return; frameAcc = Math.max(0, Math.min(step*.5, frameAcc - step)); }
   const rawDt = (ts - last)/1000; let dt = Math.min(.05, rawDt); last = ts; perfTick(rawDt);
   if (G.slowmo > 0) { G.slowmo -= dt; dt *= .3; }
-  if (G.world) { update(dt); render(); if (Clip.on || Clip.pend) Clip.draw(ts); }
+  if (G.world) {
+    const t0 = performance.now(); update(dt); const t1 = performance.now(); render(); if (Clip.on || Clip.pend) Clip.draw(ts); const t2 = performance.now();
+    if (S.perfMon) perfMonTick(rawDt, t1 - t0, t2 - t1);
+  }
+}
+const pm = {n:0, acc:0, up:0, dr:0, worst:0, long:0, el:null};
+function perfMonTick(rawDt, up, dr){
+  pm.n++; pm.acc += rawDt; pm.up += up; pm.dr += dr; pm.worst = Math.max(pm.worst, rawDt*1000); if (rawDt > .034) pm.long++;
+  if (pm.acc < .5) return;
+  if (!pm.el) { pm.el = document.createElement('div'); pm.el.id = 'perfMon'; document.body.appendChild(pm.el); }
+  pm.el.hidden = false;
+  pm.el.textContent = `${Math.round(pm.n/pm.acc)} FPS · lógica ${(pm.up/pm.n).toFixed(1)} ms · dibujo ${(pm.dr/pm.n).toFixed(1)} ms · peor ${pm.worst.toFixed(0)} ms · tirones ${pm.long} · ${cv.width}×${cv.height}`;
+  pm.n = 0; pm.acc = 0; pm.up = 0; pm.dr = 0; pm.worst = 0; pm.long = 0;
 }
 if (S.quality === 'low' && !S.qPicked) { S.quality = 'med'; persist(); } // older versions lowered it automatically
 if (!touch) $('#bnR').dataset.i18n = 'readyM';
