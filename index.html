@@ -477,7 +477,7 @@ input[type=range]{width:100%;height:28px;accent-color:var(--pink)}
     <button class="candy pink wide" data-go="achievs" id="btnAch"></button>
     <button class="candy dark round" id="btnFull" aria-label="fullscreen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5v2H6v3zm11-5h5v5h-2V6h-3zM4 15h2v3h3v2H4zm14 3v-3h2v5h-5v-2z"/></svg></button>
   </div>
-  <div class="foot"><span id="langName"></span> · v1.0</div>
+  <div class="foot"><span id="langName"></span> · v1.0.1</div>
 </div></section>
 
 <section id="sLevels" class="screen illus" hidden><div class="wrap">
@@ -1229,7 +1229,8 @@ function burst(x,y,col,n,kind='dot'){
   if (!n) return;
   for (let i = 0; i < n; i++) { const a = R()*TAU, v = 60 + R()*200; parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.6+R()*.5,col,r:2+R()*3.5,kind,rot:R()*6}); }
   parts.push({x,y,vx:0,vy:0,life:.5,col,r:0,kind:'ring'});
-  if (parts.length > 600) parts.splice(0, parts.length-600);
+  const cap = S.quality === 'low' ? 140 : S.quality === 'ultra' ? 500 : 280;
+  if (parts.length > cap) parts.splice(0, parts.length - cap);
 }
 function onScreen(x, y, pad=80){ const hw = VW/cam.z/2 + pad, hh = VH/cam.z/2 + pad; return Math.abs(x - cam.x) < hw && Math.abs(y - cam.y) < hh; }
 
@@ -1665,6 +1666,8 @@ function perfTick(rawDt){
   perf.acc += rawDt; perf.n++;
   if (perf.acc < 1) return;
   const fps = perf.n/perf.acc; perf.acc = 0; perf.n = 0;
+  if (fps < 45 && Clip.on && !Clip.pend) { Clip.slowN = (Clip.slowN||0) + 1; if (Clip.slowN >= 2) { Clip.stop(true); Clip.suspended = true; } }
+  else if (fps >= 52) Clip.slowN = 0;
   if (fps < 50) { perf.slowT++; perf.fastT = 0; } else if (fps > 57) { perf.fastT++; perf.slowT = 0; } else { perf.slowT = 0; perf.fastT = 0; }
   if (perf.slowT >= 2 && perf.scale > .6) { perf.scale = Math.max(.6, perf.scale - .15); perf.slowT = 0; layout(); }
   else if (perf.slowT >= 4 && S.quality !== 'low') { S.quality = S.quality === 'ultra' ? 'med' : 'low'; perf.scale = 1; persist(); layout(); perf.slowT = 0; toast(t('quality'), t(S.quality)); }
@@ -2929,16 +2932,18 @@ const Clip = {
   },
   start(keepBest){
     this.stop(true); this.ending = false;
+    if (this.suspended) { updateClipUI(); return; }
     if (!keepBest) { this.sid++; if (this.best) { try { URL.revokeObjectURL(this.best.url); } catch(e) {} } this.best = null; }
     updateClipUI();
     if (S.clips === false) return;
     this.init(); if (!this.ok) return;
-    const lo = S.quality === 'low' || WEAK;
+    const lo = S.quality === 'low' || WEAK || touch;
+    this.fps = touch ? 24 : 30;
     if (!this.stream || this.cv.width !== (lo ? 360 : 540)) {
       this.W = this.cv.width = lo ? 360 : 540; this.H = this.cv.height = lo ? 640 : 960;
       this.draw(performance.now());
       try {
-        const tracks = this.cv.captureStream(30).getVideoTracks();
+        const tracks = this.cv.captureStream(this.fps || 30).getVideoTracks();
         if (Snd.ctx && Snd.out) {
           if (!this.aDest) { this.aDest = Snd.ctx.createMediaStreamDestination(); Snd.out.connect(this.aDest); }
           tracks.push(...this.aDest.stream.getAudioTracks());
@@ -2952,7 +2957,7 @@ const Clip = {
   spawn(){
     try {
       const big = this.W > 400;
-      const r = new MediaRecorder(this.stream, {mimeType:this.mime, videoBitsPerSecond: big ? 3500000 : 1800000, audioBitsPerSecond:96000});
+      const r = new MediaRecorder(this.stream, {mimeType:this.mime, videoBitsPerSecond: big ? 3500000 : 1400000, audioBitsPerSecond:96000});
       const o = {r, chunks:[], keep:false, sid:this.sid};
       r.ondataavailable = e => { if (e.data && e.data.size) o.chunks.push(e.data); };
       r.onstop = () => { if (o.keep) this.done(o); else o.chunks = []; };
@@ -3008,7 +3013,7 @@ const Clip = {
   resume(){ if (this.ok && S.clips !== false && !this.on) this.start(true); },
   /* composite frame: game crop + branding */
   draw(ts){
-    if (ts - this.lastDraw < 31) return; this.lastDraw = ts;
+    if (ts - this.lastDraw < (this.fps === 24 ? 40 : 31)) return; this.lastDraw = ts;
     const c = this.c, W = this.W, H = this.H, k = W/540, sw0 = cv.width, sh0 = cv.height, ta = W/H;
     let sw = sw0, sh = sh0; if (sw/sh > ta) sw = sh*ta; else sh = sw/ta;
     c.globalAlpha = 1; c.drawImage(cv, (sw0 - sw)/2, (sh0 - sh)/2, sw, sh, 0, 0, W, H);
