@@ -477,7 +477,7 @@ input[type=range]{width:100%;height:28px;accent-color:var(--pink)}
     <button class="candy pink wide" data-go="achievs" id="btnAch"></button>
     <button class="candy dark round" id="btnFull" aria-label="fullscreen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5v2H6v3zm11-5h5v5h-2V6h-3zM4 15h2v3h3v2H4zm14 3v-3h2v5h-5v-2z"/></svg></button>
   </div>
-  <div class="foot"><span id="langName"></span> · v1.0.1</div>
+  <div class="foot"><span id="langName"></span> · v1.0.2</div>
 </div></section>
 
 <section id="sLevels" class="screen illus" hidden><div class="wrap">
@@ -553,6 +553,7 @@ input[type=range]{width:100%;height:28px;accent-color:var(--pink)}
   <div class="card glass"><img class="mascot mascotImg" src="img/s1.webp" alt="">
     <div class="result" id="resBody"></div>
     <div id="resClip" hidden><video id="resClipV" muted loop playsinline autoplay></video><div class="cl"><span id="resClipL"></span><button class="candy pink" id="resShare"></button></div></div>
+    <button class="candy pink" id="resDouble" hidden></button>
     <button class="candy mint" id="resRevive" hidden></button>
     <button class="candy" id="resMain"></button>
     <div class="row"><button class="candy mint" id="resRetry" data-i18n="retry"></button><button class="candy dark" id="resMenu" data-i18n="menu"></button></div>
@@ -601,12 +602,12 @@ const I18N_X = {
 };
 for (const l in I18N_X) Object.assign(I18N[l], I18N_X[l]);
 const I18N_C = {
-  es:{clips:'Clips automáticos',clipSaved:'¡Momento guardado!',clipShare:'Compartir momento',clipWait:'Preparando clip…',clipDone:'Clip guardado',clipTxt:'¡Mira esta jugada en Culebrilla! 🐍',clipEnd:'¡Juega gratis!',clipNo:'No se pudo compartir aquí',clipBomb:'¡BOMBA x{n}!',q_loop1:'Haz 1 encierro',streak1:'Racha: 1 día',firstD:'Come frutas para crecer. ¡Que tu cabeza no choque con otra culebrilla!',boostNeed:'¡Come un poco más para usar el turbo!',tutSafe:'¡Cuidado! Chocar con otra culebrilla te elimina',killedBy:'Te eliminó {n}',tut_moveM:'Mueve el ratón para guiar a tu culebrilla',tut_boostM:'Mantén pulsado el clic (o Espacio) para el turbo',readyM:'Haz clic para empezar',hp_moveM:'Mueve el ratón para guiar a tu culebrilla. Mantén el clic o Espacio para el turbo. También puedes usar las flechas o WASD.'},
-  en:{clips:'Auto clips',clipSaved:'Moment saved!',clipShare:'Share moment',clipWait:'Preparing clip…',clipDone:'Clip saved',clipTxt:'Check out this play in Culebrilla! 🐍',clipEnd:'Play free!',clipNo:'Could not share here',clipBomb:'BOMB x{n}!',q_loop1:'Make 1 lasso',streak1:'Streak: 1 day',firstD:'Eat fruit to grow. Don\'t let your head hit another snake!',boostNeed:'Eat a bit more to use boost!',tutSafe:'Careful! Hitting another snake knocks you out',killedBy:'{n} took you out',tut_moveM:'Move the mouse to steer your snake',tut_boostM:'Hold the mouse button (or Space) to boost',readyM:'Click to start',hp_moveM:'Move the mouse to steer your snake. Hold the mouse button or Space to boost. Arrow keys or WASD work too.'},
-  pt:{clips:'Clipes automáticos',clipSaved:'Momento salvo!',clipShare:'Compartilhar momento',clipWait:'Preparando clipe…',clipDone:'Clipe salvo',clipTxt:'Olha essa jogada no Culebrilla! 🐍',clipEnd:'Jogue grátis!',clipNo:'Não deu para compartilhar aqui',clipBomb:'BOMBA x{n}!',q_loop1:'Faça 1 laço',streak1:'Sequência: 1 dia',firstD:'Coma frutas para crescer. Não bata a cabeça em outra cobrinha!',boostNeed:'Coma um pouco mais para usar o turbo!',tutSafe:'Cuidado! Bater em outra cobrinha te elimina',killedBy:'{n} te eliminou',tut_moveM:'Mova o mouse para guiar sua cobrinha',tut_boostM:'Segure o clique (ou Espaço) para o turbo',readyM:'Clique para começar',hp_moveM:'Mova o mouse para guiar sua cobrinha. Segure o clique ou Espaço para o turbo. As setas ou WASD também funcionam.'},
-  fr:{clips:'Clips automatiques',clipSaved:'Moment enregistré !',clipShare:'Partager le moment',clipWait:'Préparation du clip…',clipDone:'Clip enregistré',clipTxt:'Regarde cette action dans Culebrilla ! 🐍',clipEnd:'Joue gratuitement !',clipNo:'Partage impossible ici',clipBomb:'BOMBE x{n} !',q_loop1:'Fais 1 lasso',streak1:'Série : 1 jour',firstD:'Mange des fruits pour grandir. Ne cogne pas ta tête contre un autre serpent !',boostNeed:'Mange un peu plus pour utiliser le turbo !',tutSafe:'Attention ! Toucher un autre serpent t\'élimine',killedBy:'{n} t\'a éliminé',tut_moveM:'Bouge la souris pour guider ton serpent',tut_boostM:'Maintiens le clic (ou Espace) pour le turbo',readyM:'Clique pour commencer',hp_moveM:'Bouge la souris pour guider ton serpent. Maintiens le clic ou Espace pour le turbo. Les flèches ou ZQSD marchent aussi.'},
-  de:{clips:'Auto-Clips',clipSaved:'Moment gespeichert!',clipShare:'Moment teilen',clipWait:'Clip wird erstellt…',clipDone:'Clip gespeichert',clipTxt:'Schau dir diesen Zug in Culebrilla an! 🐍',clipEnd:'Gratis spielen!',clipNo:'Teilen hier nicht möglich',clipBomb:'BOMBE x{n}!',q_loop1:'Mach 1 Lasso',streak1:'Serie: 1 Tag',firstD:'Friss Früchte, um zu wachsen. Stoß nicht mit dem Kopf gegen andere Schlangen!',boostNeed:'Friss etwas mehr, um Turbo zu nutzen!',tutSafe:'Vorsicht! Stößt du gegen eine Schlange, bist du raus',killedBy:'{n} hat dich erwischt',tut_moveM:'Bewege die Maus, um deine Schlange zu lenken',tut_boostM:'Halte die Maustaste (oder Leertaste) für Turbo',readyM:'Klicke zum Starten',hp_moveM:'Bewege die Maus, um deine Schlange zu lenken. Halte die Maustaste oder Leertaste für Turbo. Pfeiltasten oder WASD gehen auch.'},
-  ja:{clips:'自動クリップ',clipSaved:'名場面を保存！',clipShare:'名場面をシェア',clipWait:'クリップ準備中…',clipDone:'クリップを保存しました',clipTxt:'Culebrillaのこのプレイを見て！🐍',clipEnd:'無料で遊ぼう！',clipNo:'ここではシェアできません',clipBomb:'ボム x{n}！',q_loop1:'囲い込みを1回',streak1:'連続1日',firstD:'フルーツを食べて大きくなろう。頭をほかのヘビにぶつけないで！',boostNeed:'もう少し食べるとブーストが使えるよ！',tutSafe:'気をつけて！ほかのヘビにぶつかるとアウト',killedBy:'{n}にやられた',tut_moveM:'マウスを動かしてヘビを操作しよう',tut_boostM:'クリック長押し（またはスペース）でブースト',readyM:'クリックしてスタート',hp_moveM:'マウスでヘビを操作。クリック長押しかスペースでブースト。矢印キーやWASDも使えます。'}
+  es:{clips:'Clips automáticos',clipSaved:'¡Momento guardado!',clipShare:'Compartir momento',clipWait:'Preparando clip…',clipDone:'Clip guardado',clipTxt:'¡Mira esta jugada en Culebrilla! 🐍',clipEnd:'¡Juega gratis!',clipNo:'No se pudo compartir aquí',clipBomb:'¡BOMBA x{n}!',q_loop1:'Haz 1 encierro',streak1:'Racha: 1 día',firstD:'Come frutas para crecer. ¡Que tu cabeza no choque con otra culebrilla!',boostNeed:'¡Come un poco más para usar el turbo!',tutSafe:'¡Cuidado! Chocar con otra culebrilla te elimina',killedBy:'Te eliminó {n}',tut_moveM:'Mueve el ratón para guiar a tu culebrilla',tut_boostM:'Mantén pulsado el clic (o Espacio) para el turbo',readyM:'Haz clic para empezar',hp_moveM:'Mueve el ratón para guiar a tu culebrilla. Mantén el clic o Espacio para el turbo. También puedes usar las flechas o WASD.',adSkip:'¡Mira el anuncio completo para recibir el premio!',adNo:'El anuncio no está disponible ahora',adDouble:'📺 Duplicar oro (+{n})',adThanks:'¡Oro duplicado! +{n}'},
+  en:{clips:'Auto clips',clipSaved:'Moment saved!',clipShare:'Share moment',clipWait:'Preparing clip…',clipDone:'Clip saved',clipTxt:'Check out this play in Culebrilla! 🐍',clipEnd:'Play free!',clipNo:'Could not share here',clipBomb:'BOMB x{n}!',q_loop1:'Make 1 lasso',streak1:'Streak: 1 day',firstD:'Eat fruit to grow. Don\'t let your head hit another snake!',boostNeed:'Eat a bit more to use boost!',tutSafe:'Careful! Hitting another snake knocks you out',killedBy:'{n} took you out',tut_moveM:'Move the mouse to steer your snake',tut_boostM:'Hold the mouse button (or Space) to boost',readyM:'Click to start',hp_moveM:'Move the mouse to steer your snake. Hold the mouse button or Space to boost. Arrow keys or WASD work too.',adSkip:'Watch the whole ad to get the reward!',adNo:'No ad available right now',adDouble:'📺 Double gold (+{n})',adThanks:'Gold doubled! +{n}'},
+  pt:{clips:'Clipes automáticos',clipSaved:'Momento salvo!',clipShare:'Compartilhar momento',clipWait:'Preparando clipe…',clipDone:'Clipe salvo',clipTxt:'Olha essa jogada no Culebrilla! 🐍',clipEnd:'Jogue grátis!',clipNo:'Não deu para compartilhar aqui',clipBomb:'BOMBA x{n}!',q_loop1:'Faça 1 laço',streak1:'Sequência: 1 dia',firstD:'Coma frutas para crescer. Não bata a cabeça em outra cobrinha!',boostNeed:'Coma um pouco mais para usar o turbo!',tutSafe:'Cuidado! Bater em outra cobrinha te elimina',killedBy:'{n} te eliminou',tut_moveM:'Mova o mouse para guiar sua cobrinha',tut_boostM:'Segure o clique (ou Espaço) para o turbo',readyM:'Clique para começar',hp_moveM:'Mova o mouse para guiar sua cobrinha. Segure o clique ou Espaço para o turbo. As setas ou WASD também funcionam.',adSkip:'Assista o anúncio inteiro para ganhar o prêmio!',adNo:'Anúncio indisponível agora',adDouble:'📺 Dobrar ouro (+{n})',adThanks:'Ouro dobrado! +{n}'},
+  fr:{clips:'Clips automatiques',clipSaved:'Moment enregistré !',clipShare:'Partager le moment',clipWait:'Préparation du clip…',clipDone:'Clip enregistré',clipTxt:'Regarde cette action dans Culebrilla ! 🐍',clipEnd:'Joue gratuitement !',clipNo:'Partage impossible ici',clipBomb:'BOMBE x{n} !',q_loop1:'Fais 1 lasso',streak1:'Série : 1 jour',firstD:'Mange des fruits pour grandir. Ne cogne pas ta tête contre un autre serpent !',boostNeed:'Mange un peu plus pour utiliser le turbo !',tutSafe:'Attention ! Toucher un autre serpent t\'élimine',killedBy:'{n} t\'a éliminé',tut_moveM:'Bouge la souris pour guider ton serpent',tut_boostM:'Maintiens le clic (ou Espace) pour le turbo',readyM:'Clique pour commencer',hp_moveM:'Bouge la souris pour guider ton serpent. Maintiens le clic ou Espace pour le turbo. Les flèches ou ZQSD marchent aussi.',adSkip:'Regarde toute la pub pour recevoir la récompense !',adNo:'Pas de pub disponible pour le moment',adDouble:'📺 Doubler l\'or (+{n})',adThanks:'Or doublé ! +{n}'},
+  de:{clips:'Auto-Clips',clipSaved:'Moment gespeichert!',clipShare:'Moment teilen',clipWait:'Clip wird erstellt…',clipDone:'Clip gespeichert',clipTxt:'Schau dir diesen Zug in Culebrilla an! 🐍',clipEnd:'Gratis spielen!',clipNo:'Teilen hier nicht möglich',clipBomb:'BOMBE x{n}!',q_loop1:'Mach 1 Lasso',streak1:'Serie: 1 Tag',firstD:'Friss Früchte, um zu wachsen. Stoß nicht mit dem Kopf gegen andere Schlangen!',boostNeed:'Friss etwas mehr, um Turbo zu nutzen!',tutSafe:'Vorsicht! Stößt du gegen eine Schlange, bist du raus',killedBy:'{n} hat dich erwischt',tut_moveM:'Bewege die Maus, um deine Schlange zu lenken',tut_boostM:'Halte die Maustaste (oder Leertaste) für Turbo',readyM:'Klicke zum Starten',hp_moveM:'Bewege die Maus, um deine Schlange zu lenken. Halte die Maustaste oder Leertaste für Turbo. Pfeiltasten oder WASD gehen auch.',adSkip:'Schau die ganze Werbung, um die Belohnung zu bekommen!',adNo:'Gerade keine Werbung verfügbar',adDouble:'📺 Gold verdoppeln (+{n})',adThanks:'Gold verdoppelt! +{n}'},
+  ja:{clips:'自動クリップ',clipSaved:'名場面を保存！',clipShare:'名場面をシェア',clipWait:'クリップ準備中…',clipDone:'クリップを保存しました',clipTxt:'Culebrillaのこのプレイを見て！🐍',clipEnd:'無料で遊ぼう！',clipNo:'ここではシェアできません',clipBomb:'ボム x{n}！',q_loop1:'囲い込みを1回',streak1:'連続1日',firstD:'フルーツを食べて大きくなろう。頭をほかのヘビにぶつけないで！',boostNeed:'もう少し食べるとブーストが使えるよ！',tutSafe:'気をつけて！ほかのヘビにぶつかるとアウト',killedBy:'{n}にやられた',tut_moveM:'マウスを動かしてヘビを操作しよう',tut_boostM:'クリック長押し（またはスペース）でブースト',readyM:'クリックしてスタート',hp_moveM:'マウスでヘビを操作。クリック長押しかスペースでブースト。矢印キーやWASDも使えます。',adSkip:'広告を最後まで見ると報酬がもらえます！',adNo:'今は広告がありません',adDouble:'📺 ゴールド2倍 (+{n})',adThanks:'ゴールド2倍！ +{n}'}
 };
 for (const l in I18N_C) Object.assign(I18N[l], I18N_C[l]);
 
@@ -799,6 +800,45 @@ const Snd = {
 
 /* ================= Native app bridge (Android build via Capacitor); the web version ignores all of this ================= */
 const NATIVE = (() => { try { const C = window.Capacitor; return C && C.isNativePlatform && C.isNativePlatform() ? C.Plugins : null; } catch(e) { return null; } })();
+/* ================= Rewarded ads (Android app only, Google AdMob). The player always chooses to watch. ================= */
+const Ads = {
+  ok:false, A:null, loaded:null, busy:false, test:true,
+  UNITS:{revive:'ca-app-pub-1277936521886214/4201443691', gold:'ca-app-pub-1277936521886214/6939946818'},
+  async init(){
+    const A = NATIVE && NATIVE.AdMob; if (!A) return;
+    this.A = A; this.test = !(window.CULEBRILLA_ADS && window.CULEBRILLA_ADS.test === false);
+    try {
+      await A.initialize({});
+      try { const c = await A.requestConsentInfo(); if (c && c.status === 'REQUIRED' && c.isConsentFormAvailable) await A.showConsentForm(); } catch(e) {}
+      A.addListener('onRewardedVideoAdReward', () => { this.rewarded = true; });
+      A.addListener('onRewardedVideoAdDismissed', () => this.done && this.done());
+      A.addListener('onRewardedVideoAdFailedToShow', () => { this.failed = true; this.done && this.done(); });
+      this.ok = true;
+    } catch(e) { this.ok = false; }
+  },
+  async preload(key){
+    if (!this.ok || this.busy || this.loaded === key) return;
+    try { this.loaded = null; await this.A.prepareRewardVideoAd({adId:this.UNITS[key], isTesting:this.test}); this.loaded = key; } catch(e) { this.loaded = null; }
+  },
+  /* resolves 'reward' (watched to the end), 'skip' (closed early) or 'error' (no ad: no internet, no fill) */
+  async show(key){
+    if (!this.ok || this.busy) return 'error';
+    this.busy = true; this.rewarded = false; this.failed = false;
+    try { if (Snd.ctx) Snd.ctx.suspend(); } catch(e) {}
+    let res = 'error';
+    try {
+      if (this.loaded !== key) await this.A.prepareRewardVideoAd({adId:this.UNITS[key], isTesting:this.test});
+      this.loaded = null;
+      const closed = new Promise(ok => { this.done = ok; setTimeout(ok, 120000); });
+      await this.A.showRewardVideoAd();
+      await closed;
+      res = this.rewarded ? 'reward' : this.failed ? 'error' : 'skip';
+    } catch(e) { res = this.rewarded ? 'reward' : 'error'; }
+    this.done = null; this.busy = false;
+    try { if (Snd.ctx) Snd.ctx.resume(); } catch(e) {}
+    return res;
+  }
+};
 function buzz(p){
   if (!S.haptics) return;
   if (NATIVE && NATIVE.Haptics) { const ms = Array.isArray(p) ? p.filter((_, i) => i % 2 === 0).reduce((a, b) => a + b, 0) : p; try { NATIVE.Haptics.vibrate({duration: Math.max(8, Math.min(160, ms))}).catch(() => {}); } catch(e) {} return; }
@@ -2868,14 +2908,22 @@ function showResult(r){
     if (r.win) { save.stats.wins++; unlock('a_royal'); }
     html = `<div class="rt stroke">${r.win ? t('win') : t('gameover')}</div>${!r.win && G.killedBy ? `<div class="rl kb">${t('killedBy', {n:G.killedBy})}</div>` : ''}<div class="rb stroke">#${r.place}</div><div class="rl">${t('place')} ${r.place}/${G.world.snakes.length} · ${t('kills')} ${p.kills} · ${t('lenL')} ${dispLen(p)}</div>`;
   }
-  const pay = runPayout();
+  const pay = runPayout(); G.lastPay = pay;
   if (!G.chestGiven && (G.score >= 800 || p.kills >= 2 || (G.mode === 'adventure' && r.win))) { G.chestGiven = true; const tier = earnChest(); html += tier >= 0 ? `<div class="chestwon">${chestSVG(tier)}<b>${t('chestWon',{s:t('ch'+tier)})}</b></div>` : `<div class="chestwon full"><b>${t('chestsFull')}</b></div>`; }
   html += rewardsHTML(pay);
   persist();
   body.innerHTML = html; main.textContent = mainLabel; main.onclick = () => { Snd.play('tick'); mainAct(); };
   $('#resRetry').hidden = retry;
   const rv = $('#resRevive'); rv.hidden = !(G.mode === 'classic' && !r.win && !G.revived);
-  rv.textContent = '♥ ' + t('revive'); rv.onclick = revive;
+  rv.textContent = (Ads.ok ? '📺 ' : '♥ ') + t('revive');
+  rv.onclick = () => { if (!Ads.ok) { revive(); return; } rv.disabled = true; Ads.show('revive').then(r => { rv.disabled = false; if (r !== 'skip') revive(); else toast('📺', t('adSkip')); }); };
+  const dbl = $('#resDouble'); dbl.hidden = !(Ads.ok && pay.dc >= 5 && !G.doubled); dbl.disabled = false;
+  dbl.textContent = t('adDouble', {n: pay.dc});
+  dbl.onclick = () => { dbl.disabled = true; Ads.show('gold').then(r => {
+    if (r === 'reward') { G.doubled = true; save.coins += pay.dc; persist(); dbl.hidden = true; Snd.play('coin'); toast('🍎', t('adThanks', {n: pay.dc*2}));
+      const c = document.querySelector('#resBody .chipc b'); if (c) c.textContent = pay.dc*2; refreshMenu && refreshMenu(); }
+    else { dbl.disabled = false; toast('📺', t(r === 'skip' ? 'adSkip' : 'adNo')); } }); };
+  if (Ads.ok) Ads.preload(G.mode === 'classic' && !r.win && !G.revived ? 'revive' : 'gold');
   showScreen('result');
   updateClipUI();
   animateResult(pay);
@@ -3103,6 +3151,7 @@ if (NATIVE) {
     try { NATIVE.App.minimizeApp().catch(() => {}); } catch(e) {}
   }); } catch(e) {}
   try { NATIVE.App && NATIVE.App.addListener('pause', () => { if (G.state === 'play') pause(); }); } catch(e) {}
+  Ads.init();
 }
 metaInit(); applyI18n(); layout(); safeB = parseFloat(getComputedStyle($('#safe')).paddingBottom) || 0;
 loadAssets(() => { showScreen('menu'); if (dailyReady()) setTimeout(() => { if (!$('#sMenu').hidden) showScreen('daily'); }, 700); });

@@ -4,4 +4,5 @@
     <string name="title_activity_main">Culebrilla</string>
     <string name="package_name">com.cesardelossantos.culebrilla</string>
     <string name="custom_url_scheme">com.cesardelossantos.culebrilla</string>
+    <string name="admob_app_id">ca-app-pub-1277936521886214~9949253534</string>
 </resources>
