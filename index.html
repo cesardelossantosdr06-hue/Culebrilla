@@ -481,7 +481,7 @@ input[type=range]{width:100%;height:28px;accent-color:var(--pink)}
     <button class="candy pink wide" data-go="achievs" id="btnAch"></button>
     <button class="candy dark round" id="btnFull" aria-label="fullscreen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5v2H6v3zm11-5h5v5h-2V6h-3zM4 15h2v3h3v2H4zm14 3v-3h2v5h-5v-2z"/></svg></button>
   </div>
-  <div class="foot"><span id="langName"></span> · v1.0.6</div>
+  <div class="foot"><span id="langName"></span> · v1.0.7</div>
 </div></section>
 
 <section id="sLevels" class="screen illus" hidden><div class="wrap">
@@ -679,7 +679,7 @@ const skinOpen = i => (save.owned || []).includes(i);
 
 /* ================= Quality ================= */
 const QUAL = {
-  low:  {parts:0,  glow:false, fps:30, dpr:1,   shake:false, amb:0,  detail:false},
+  low:  {parts:0,  glow:false, fps:60, dpr:1,   shake:false, amb:0,  detail:false},
   med:  {parts:12, glow:false, fps:60, dpr:1.75,   shake:true,  amb:45, detail:true},
   ultra:{parts:24, glow:true,  fps:0,  dpr:2.5, shake:true,  amb:80, detail:true}
 };
@@ -2362,9 +2362,18 @@ function drawProp(c, p, tm, deco){
 /* ================= Rendering cache: pre-rendered sprites so each frame is mostly cheap image copies ================= */
 const SPR = new Map();
 const FRENZY_COLS = ['#ff4d6d','#ffb03a','#ffe94a','#5aff8a','#3ee6ff','#7a7aff','#ff5ad0'];
+/* each sprite is painted once into a small canvas, then turned into an ImageBitmap: a ready-made texture the
+   graphics chip keeps, instead of re-uploading the canvas pixels every time it is drawn (huge on phones) */
+const BITMAPS = typeof createImageBitmap === 'function';
 function spr(key, w, h, draw){
   let s = SPR.get(key);
-  if (!s) { s = document.createElement('canvas'); s.width = w; s.height = h; draw(s.getContext('2d'), w, h); SPR.set(key, s); if (SPR.size > 1400) SPR.delete(SPR.keys().next().value); }
+  if (!s) {
+    const k = document.createElement('canvas'); k.width = w; k.height = h; draw(k.getContext('2d'), w, h);
+    if (key.charCodeAt(0) === 76 && !key.startsWith('LBL')) k._bb = alphaBox(k); // ground-life frames: visible box
+    s = k; SPR.set(key, k);
+    if (BITMAPS) createImageBitmap(k).then(b => { if (k._bb) b._bb = k._bb; if (SPR.get(key) === k) SPR.set(key, b); }).catch(() => {});
+    if (SPR.size > 1600) SPR.delete(SPR.keys().next().value);
+  }
   return s;
 }
 const qc = v => Math.min(255, Math.round(v/10)*10);
