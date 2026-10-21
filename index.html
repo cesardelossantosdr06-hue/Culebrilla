@@ -797,10 +797,13 @@ const Snd = {
   }
 };
 
-function buzz(p){ if (!S.haptics || !navigator.vibrate) return; try { navigator.vibrate(p); } catch(e) {} }
-
-
-function buzz(p){ if (!S.haptics || !navigator.vibrate) return; try { navigator.vibrate(p); } catch(e) {} }
+/* ================= Native app bridge (Android build via Capacitor); the web version ignores all of this ================= */
+const NATIVE = (() => { try { const C = window.Capacitor; return C && C.isNativePlatform && C.isNativePlatform() ? C.Plugins : null; } catch(e) { return null; } })();
+function buzz(p){
+  if (!S.haptics) return;
+  if (NATIVE && NATIVE.Haptics) { const ms = Array.isArray(p) ? p.filter((_, i) => i % 2 === 0).reduce((a, b) => a + b, 0) : p; try { NATIVE.Haptics.vibrate({duration: Math.max(8, Math.min(160, ms))}).catch(() => {}); } catch(e) {} return; }
+  if (!navigator.vibrate) return; try { navigator.vibrate(p); } catch(e) {}
+}
 
 /* ================= Helpers ================= */
 const rgb = h => { h = h.replace('#',''); return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16)); };
@@ -2765,7 +2768,7 @@ function refreshMenu(){
   $('#tScene').style.backgroundImage = `url(img/floor_${save.scene+1}.jpg)`;
   $('#tSceneImg').src = `img/d${save.scene+1}_0.webp`;
   setMascots(); rollQuests(); refreshBadges(); buildChests(); Snd.setMood('menu', save.scene);
-  $('#btnFull').hidden = !document.fullscreenEnabled;
+  $('#btnFull').hidden = !document.fullscreenEnabled || !!NATIVE;
 }
 function buildLevels(){
   const g = $('#levelGrid'); g.innerHTML = '';
@@ -3054,6 +3057,14 @@ function updateClipUI(){
 async function shareClip(){
   const b = Clip.best; if (!b) return; Snd.play('tick');
   const name = 'culebrilla-' + Date.now().toString(36) + '.' + Clip.ext;
+  if (NATIVE && NATIVE.Filesystem && NATIVE.Share) { // Android app: save the clip and open the share sheet (WhatsApp, TikTok...)
+    try {
+      const b64 = await new Promise((ok, bad) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = bad; r.readAsDataURL(b.blob); });
+      const f = await NATIVE.Filesystem.writeFile({path:name, data:b64, directory:'CACHE'});
+      await NATIVE.Share.share({title:'Culebrilla', text:t('clipTxt'), files:[f.uri], dialogTitle:t('clipShare')});
+    } catch(e) { if (!/cancel/i.test(String(e && (e.message || e)))) toast('🎬', t('clipNo')); }
+    return;
+  }
   try {
     const file = new File([b.blob], name, {type:b.blob.type});
     if (navigator.canShare && navigator.canShare({files:[file]})) { await navigator.share({files:[file], title:'Culebrilla', text:t('clipTxt')}); return; }
@@ -3077,6 +3088,17 @@ function frame(ts){
   if (G.world) { update(dt); render(); if (Clip.on || Clip.pend) Clip.draw(ts); }
 }
 if (!touch) $('#bnR').dataset.i18n = 'readyM';
+if (NATIVE) {
+  try { NATIVE.StatusBar && NATIVE.StatusBar.hide().catch(() => {}); } catch(e) {}
+  try { NATIVE.App && NATIVE.App.addListener('backButton', () => { // Android back: pause, close panels, never quit by accident
+    if (G.state === 'play' || G.state === 'ready') { pause(); return; }
+    if (G.state === 'pause') { resume(); return; }
+    if (!$('#sResult').hidden) { goMenu(); return; }
+    if ($('#sMenu').hidden) { Snd.play('tick'); showScreen(!$('#sHelp').hidden ? helpFrom : 'menu'); return; }
+    try { NATIVE.App.minimizeApp().catch(() => {}); } catch(e) {}
+  }); } catch(e) {}
+  try { NATIVE.App && NATIVE.App.addListener('pause', () => { if (G.state === 'play') pause(); }); } catch(e) {}
+}
 metaInit(); applyI18n(); layout(); safeB = parseFloat(getComputedStyle($('#safe')).paddingBottom) || 0;
 loadAssets(() => { showScreen('menu'); if (dailyReady()) setTimeout(() => { if (!$('#sMenu').hidden) showScreen('daily'); }, 700); });
 $('#wSpin').onclick = spinWheel;

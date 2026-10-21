@@ -1,0 +1,21 @@
+{
+  "name": "culebrilla-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Culebrilla para Android (Capacitor)",
+  "scripts": {
+    "copy-web": "rm -rf www && mkdir -p www && cp ../index.html ../fonts.css www/ && cp -r ../fonts ../img www/",
+    "sync": "npm run copy-web && npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/cli": "8.5.3",
+    "@capacitor/core": "8.5.3",
+    "@capacitor/filesystem": "8.1.5",
+    "@capacitor/haptics": "8.0.2",
+    "@capacitor/share": "8.0.3",
+    "@capacitor/splash-screen": "8.0.2",
+    "@capacitor/status-bar": "8.0.4"
+  }
+}
